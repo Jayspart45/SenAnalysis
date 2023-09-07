@@ -1,14 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
 
-export default function AudioInput({ handleFileChange, audioFile }) {
+export default function AudioInput({
+  handleFileChange,
+  audioFile,
+  setTranscription,
+}) {
   const Navigate = useNavigate();
-
   const handleUpload = () => {
     const Data = new FormData();
     Data.append("audioFile", audioFile);
     if (audioFile) {
-      axios.post("fetchText/", Data).then((res) => console.log(res));
+      axios.post("fetchText/", Data).then((res) => setTranscription(res));
       Navigate("/transcriber");
     }
   };
@@ -52,7 +56,7 @@ export default function AudioInput({ handleFileChange, audioFile }) {
             type="file"
             onChange={handleFileChange}
             id="dropzone-file"
-            accept="audio/*"
+            accept="audio/wav, audio/mp3"
             className="hidden"
           />
         </label>

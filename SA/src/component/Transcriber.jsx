@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
+// import data from "./json/data.json";
 
-export default function Transcriber({ audioFile }) {
+export default function Transcriber({ audioFile, data }) {
+  const [transcription, setTranscription] = useState([]);
+  const audioRef = useRef(null);
+  useEffect(() => {
+    setTranscription(data);
+  }, []);
+
+  const handleSeekTo = (time, end) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      audioRef.current.play();
+      console.log(end - time);
+      setTimeout(() => {
+        // if (audioRef.current.currentTime <= end) {
+        console.log("Stop");
+        audioRef.current.pause();
+        // }
+      }, (end - time) * 1000); // Convert seconds to milliseconds
+    }
+  };
+
   return (
-    <div className="w-[48rem] font-Poppins flex flex-col bg-gray-400 p-10 rounded">
+    <div className="w-[48rem] font-Poppins flex flex-col bg-gray-400 p-10 h-[50vh] rounded">
       <h2 className="mb-2 flex mx-auto font-medium text-center ">
         <span className="bg-white px-2 mx-2 rounded">Transcription</span>
         Component
@@ -21,11 +42,23 @@ export default function Transcriber({ audioFile }) {
           />
         </svg>
       </h2>
-      <audio controls>
+      <audio ref={audioRef} controls>
         <source src={URL.createObjectURL(audioFile)} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
-      <textarea className="mt-5 rounded h-32 p-5"></textarea>
+      <div className="mt-5 rounded  p-5 overflow-y-scroll">
+        {transcription.map((item, index) => (
+          <ul
+            onClick={() => handleSeekTo(item.start, item.end)}
+            key={index}
+            className="cursor-pointer bg-white border p-2 flex space-x-5 "
+          >
+            <li className=" text-red-500">{item.start}</li>
+            <li className="text-green-500">{item.end}</li>
+            <li>{item.text}</li>
+          </ul>
+        ))}
+      </div>
     </div>
   );
 }

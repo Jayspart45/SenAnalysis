@@ -5,6 +5,8 @@ import { useState } from "react";
 
 export default function Home() {
   const [audioFile, setAudioFile] = useState(null);
+  const [transcription, setTranscription] = useState([]);
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     console.log(selectedFile);
@@ -40,12 +42,18 @@ export default function Home() {
               <AudioInput
                 handleFileChange={handleFileChange}
                 audioFile={audioFile}
+                setTranscription={setTranscription}
               />
             }
           />
           <Route
             path="/transcriber"
-            element={<Transcriber audioFile={audioFile} />}
+            element={
+              <Transcriber
+                audioFile={audioFile}
+                data={transcription}
+              />
+            }
           />
         </Routes>
       </Router>
