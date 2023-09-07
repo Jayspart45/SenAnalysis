@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "image": "url('/audio.png')"
+      },
       fontFamily: {
         Poppins: ["Poppins"]
       }
